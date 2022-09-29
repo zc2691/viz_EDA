@@ -1,0 +1,148 @@
+---
+title: "viz_ggplot1"
+output: github_document
+date: "2022-09-29"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Let's import Data
+
+```{r}
+library(tidyverse)
+library(ggridges)
+```
+
+This codes from the course get data
+
+```{r}
+weather_df = 
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728", "USC00519397", "USS0023B17S"),
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2017-01-01",
+    date_max = "2017-12-31") %>%
+  mutate(
+    name = recode(
+      id, 
+      USW00094728 = "CentralPark_NY", 
+      USC00519397 = "Waikiki_HA",
+      USS0023B17S = "Waterhole_WA"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %>%
+  select(name, id, everything())
+```
+
+Let's make a scatterplot
+
+```{r}
+weather_df %>% 
+  drop_na() %>% 
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_point()
+```
+
+Let's keep making the same plot but different
+```{r}
+weather_scatterplot = 
+  weather_df %>% 
+  drop_na() %>% 
+  ggplot(aes(x = tmin, y = tmax)) 
+
+weather_scatterplot +
+  geom_point()
+```
+## Let's fancy this up a bit
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point() +
+  geom_smooth()
+```
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_point(aes(color = name)) +
+  geom_smooth()
+```
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = .3) +
+  geom_smooth(se = FALSE)
+```
+
+Make separate panels.
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = .3) +
+  geom_smooth(se = FALSE) +
+  facet_grid(. ~ name)
+  ## facet_grid (~ name .)
+```
+
+`tmax` and `tmin` are boring, let's spice it up more!
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = date, y = tmax, color = name))+
+  geom_point(aes(size = prcp), alpha = .3) +
+  geom_smooth(se = FALSE) +
+  facet_grid(. ~ name)
+```
+
+LC: Write a code chain that starts with weather_df; focuses only on Central Park, converts temperatures to Fahrenheit, makes a scatterplot of min vs. max temperature, and overlays a linear regression line (using options in geom_smooth()).
+
+
+## Some quick stuff
+## weather_df %>% 
+## mutate (CONVERT TO Fahrenheit)
+
+
+```{r}
+weather_df %>% 
+  ggplot (aes(x = tmin, y = tmax)) +
+  geom_hex()
+```
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmax, fill = name)) +
+  geom_histogram() +
+  facet_grid(. ~ name)
+```
+
+Let's see more options
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmax, fill = name)) +
+  geom_density(alpha = .3) 
+```
+
+Boxplots??
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = name, y = tmax, fill = name)) +
+  geom_boxplot()
+```
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = name, y = tmax, fill = name)) +
+  geom_violin()
+```
+
+
+
+
+
+
+
+
