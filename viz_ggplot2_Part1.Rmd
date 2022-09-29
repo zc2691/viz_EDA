@@ -139,6 +139,13 @@ weather_df %>%
   geom_violin()
 ```
 
+OR
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmax, y = name)) +
+  geom_density_ridges()
+```
 
 
 
