@@ -9,7 +9,7 @@ library(tidyverse)
 ```
 
     ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-    ## ✔ ggplot2 3.3.6      ✔ purrr   0.3.4 
+    ## ✔ ggplot2 3.3.6      ✔ purrr   0.3.5 
     ## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
     ## ✔ tidyr   1.2.0      ✔ stringr 1.4.1 
     ## ✔ readr   2.1.2      ✔ forcats 0.5.2 
@@ -72,7 +72,19 @@ weather_df %>%
   geom_point()
 ```
 
-![](viz_ggplot2_Part1_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](viz_part_01_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+Let’s keep making the same plot but different
+
+``` r
+weather_df %>% 
+  drop_na() %>% 
+  filter(name == "CentralPark_NY") %>% 
+  ggplot(aes(x = tmin, y = tmax))+
+  geom_point()
+```
+
+![](viz_part_01_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 Let’s keep making the same plot but different
 
@@ -86,8 +98,9 @@ weather_scatterplot +
   geom_point()
 ```
 
-![](viz_ggplot2_Part1_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
-\## Let’s fancy this up a bit
+![](viz_part_01_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+## Let’s fancy this up a bit
 
 ``` r
 weather_df %>% 
@@ -102,7 +115,7 @@ weather_df %>%
 
     ## Warning: Removed 15 rows containing missing values (geom_point).
 
-![](viz_ggplot2_Part1_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](viz_part_01_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 ``` r
 weather_df %>% 
@@ -117,7 +130,7 @@ weather_df %>%
 
     ## Warning: Removed 15 rows containing missing values (geom_point).
 
-![](viz_ggplot2_Part1_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](viz_part_01_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
 weather_df %>% 
@@ -132,7 +145,7 @@ weather_df %>%
 
     ## Warning: Removed 15 rows containing missing values (geom_point).
 
-![](viz_ggplot2_Part1_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](viz_part_01_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 Make separate panels.
 
@@ -150,7 +163,7 @@ weather_df %>%
 
     ## Warning: Removed 15 rows containing missing values (geom_point).
 
-![](viz_ggplot2_Part1_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](viz_part_01_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 ``` r
   ## facet_grid (~ name .)
@@ -160,10 +173,11 @@ weather_df %>%
 
 ``` r
 weather_df %>% 
-  ggplot(aes(x = date, y = tmax, color = name))+
+  ggplot(aes(x = date, y = tmax, color = name)) +
   geom_point(aes(size = prcp), alpha = .3) +
   geom_smooth(se = FALSE) +
-  facet_grid(. ~ name)
+  facet_grid(. ~ name) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0, hjust = 1))
 ```
 
     ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
@@ -172,7 +186,7 @@ weather_df %>%
 
     ## Warning: Removed 3 rows containing missing values (geom_point).
 
-![](viz_ggplot2_Part1_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](viz_part_01_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 LC: Write a code chain that starts with weather_df; focuses only on
 Central Park, converts temperatures to Fahrenheit, makes a scatterplot
@@ -193,7 +207,11 @@ weather_df %>%
 
     ## Warning: Removed 15 rows containing non-finite values (stat_binhex).
 
-![](viz_ggplot2_Part1_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](viz_part_01_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+## Univariate plots …
+
+Histograms, density, boxplots, violins, …
 
 ``` r
 weather_df %>% 
@@ -206,7 +224,7 @@ weather_df %>%
 
     ## Warning: Removed 3 rows containing non-finite values (stat_bin).
 
-![](viz_ggplot2_Part1_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](viz_part_01_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 Let’s see more options
 
@@ -218,7 +236,7 @@ weather_df %>%
 
     ## Warning: Removed 3 rows containing non-finite values (stat_density).
 
-![](viz_ggplot2_Part1_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](viz_part_01_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 Boxplots??
 
@@ -230,7 +248,7 @@ weather_df %>%
 
     ## Warning: Removed 3 rows containing non-finite values (stat_boxplot).
 
-![](viz_ggplot2_Part1_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](viz_part_01_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ``` r
 weather_df %>% 
@@ -240,7 +258,7 @@ weather_df %>%
 
     ## Warning: Removed 3 rows containing non-finite values (stat_ydensity).
 
-![](viz_ggplot2_Part1_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](viz_part_01_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 OR
 
@@ -254,7 +272,7 @@ weather_df %>%
 
     ## Warning: Removed 3 rows containing non-finite values (stat_density_ridges).
 
-![](viz_ggplot2_Part1_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](viz_part_01_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 ## Saving and embedding plots
 
@@ -281,7 +299,7 @@ weather_scatterplot
 
     ## Warning: Removed 15 rows containing missing values (geom_point).
 
-![](viz_ggplot2_Part1_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](viz_part_01_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 ``` r
 ggsave("./results/weather_scatterplot.pdf", weather_scatterplot, width = 8, height = 5)
@@ -304,7 +322,7 @@ weather_scatterplot
 
     ## Warning: Removed 15 rows containing missing values (geom_point).
 
-![](viz_ggplot2_Part1_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](viz_part_01_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 Embed at a different size
 
@@ -318,4 +336,4 @@ weather_scatterplot
 
     ## Warning: Removed 15 rows containing missing values (geom_point).
 
-![](viz_ggplot2_Part1_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](viz_part_01_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->

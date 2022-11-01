@@ -19,6 +19,7 @@ library(tidyverse)
 
 ``` r
 library(ggridges)
+library(patchwork)
 ```
 
 This codes from the course get data
@@ -62,77 +63,3 @@ weather_df =
     ## date created (size, mb): 2022-09-29 10:36:56 (0.95)
 
     ## file min/max dates: 1999-09-01 / 2022-09-30
-
-Let’s make a scatterplot \## But better this time
-
-``` r
-weather_df %>% 
-  ggplot(aes(x = tmin, y =tmax, color = name)) +
-  geom_point(alpha = .5) + 
-  labs(
-    x = "Minimum Daily Temp(C)",
-    y = "Maximum Daily Temp(C)",
-    title = "Scatterplot of daily temp extremes",
-    caption = "Data come from rnoaa package"
-    ) +
-  scale_x_continuous(
-    breaks = c(-10, 0, 15), 
-    labels = c("-10C", "0", "15")
-  ) +
-  scale_y_continuous(
-    trans = "sqrt"
-  )
-```
-
-    ## Warning in self$trans$transform(x): NaNs produced
-
-    ## Warning: Transformation introduced infinite values in continuous y-axis
-
-    ## Warning: Removed 90 rows containing missing values (geom_point).
-
-![](viz_part_02_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
-
-Make a new version.
-
-``` r
-ggp_weather = 
-  weather_df %>%
-  ggplot(aes(x = tmin, y =tmax, color = name)) +
-  geom_point(alpha = .5) + 
-  labs(
-    x = "Minimum Daily Temp(C)",
-    y = "Maximum Daily Temp(C)",
-    title = "Scatterplot of daily temp extremes",
-    caption = "Data come from rnoaa package"
-  ) +
-  viridis::scale_color_viridis(
-    name = "Location",
-    discrete = TRUE
-    )
-```
-
-## Themes
-
-``` r
-ggp_weather +
-  theme_minimal()
-```
-
-    ## Warning: Removed 15 rows containing missing values (geom_point).
-
-![](viz_part_02_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
-
-``` r
-  theme(legend.position = "bottom")
-```
-
-    ## List of 1
-    ##  $ legend.position: chr "bottom"
-    ##  - attr(*, "class")= chr [1:2] "theme" "gg"
-    ##  - attr(*, "complete")= logi FALSE
-    ##  - attr(*, "validate")= logi TRUE
-
-``` r
-  ## theme_bw()
-  ## theme_classic()
-```

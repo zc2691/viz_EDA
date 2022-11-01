@@ -45,6 +45,17 @@ weather_df %>%
 ```
 
 Let's keep making the same plot but different
+
+```{r}
+weather_df %>% 
+  drop_na() %>% 
+  filter(name == "CentralPark_NY") %>% 
+  ggplot(aes(x = tmin, y = tmax))+
+  geom_point()
+```
+
+Let's keep making the same plot but different
+
 ```{r}
 weather_scatterplot = 
   weather_df %>% 
@@ -54,7 +65,9 @@ weather_scatterplot =
 weather_scatterplot +
   geom_point()
 ```
+
 ## Let's fancy this up a bit
+
 ```{r}
 weather_df %>% 
   ggplot(aes(x = tmin, y = tmax, color = name)) +
@@ -91,10 +104,11 @@ weather_df %>%
 
 ```{r}
 weather_df %>% 
-  ggplot(aes(x = date, y = tmax, color = name))+
+  ggplot(aes(x = date, y = tmax, color = name)) +
   geom_point(aes(size = prcp), alpha = .3) +
   geom_smooth(se = FALSE) +
-  facet_grid(. ~ name)
+  facet_grid(. ~ name) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0, hjust = 1))
 ```
 
 LC: Write a code chain that starts with weather_df; focuses only on Central Park, converts temperatures to Fahrenheit, makes a scatterplot of min vs. max temperature, and overlays a linear regression line (using options in geom_smooth()).
@@ -110,6 +124,10 @@ weather_df %>%
   ggplot (aes(x = tmin, y = tmax)) +
   geom_hex()
 ```
+
+## Univariate plots ...
+
+Histograms, density, boxplots, violins, ...
 
 ```{r}
 weather_df %>% 
@@ -148,6 +166,7 @@ weather_df %>%
 ```
 
 ## Saving and embedding plots
+
 First, let's save a plot
 
 ```{r}

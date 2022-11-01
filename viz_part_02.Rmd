@@ -13,9 +13,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(ggridges)
+library(patchwork)
 ```
 
-This codes from the course get data
+This codes from the course website gets the data
 
 ```{r}
 weather_df = 
@@ -36,6 +37,7 @@ weather_df =
 ```
 
 Let's make a scatterplot
+
 ## But better this time
 
 ```{r}
@@ -60,7 +62,6 @@ weather_df %>%
 Make a new version.
 
 ```{r}
-ggp_weather = 
   weather_df %>%
   ggplot(aes(x = tmin, y =tmax, color = name)) +
   geom_point(alpha = .5) + 
@@ -72,17 +73,119 @@ ggp_weather =
   ) +
   viridis::scale_color_viridis(
     name = "Location",
-    discrete = TRUE
-    )
+    discrete = TRUE)
 ```
 
 ## Themes
+
 ```{r}
-ggp_weather +
-  theme_minimal()
-  theme(legend.position = "bottom")
-  ## theme_bw()
-  ## theme_classic()
+ggp_weather = 
+  weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = .5) +
+  labs(
+    x = "Minimum Daily Temp (C)",
+    y = "Maximum Daily Temp (C)",
+    title = "Scatterplot of daily temp extremes", 
+    caption = "Data come from the rnoaa package"
+  ) +
+  viridis::scale_color_viridis(
+    name = "Location", 
+    discrete = TRUE)
 ```
+
+```{r}
+ggp_weather + 
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## Data in geom()
+
+```{r}
+central_park_df = 
+  weather_df %>% 
+  filter(name == "CentralPark_NY")
+
+waikiki_df = 
+  weather_df %>% 
+  filter(name == "Waikiki_HA")
+
+ggplot(waikiki_df, aes(x = date, y = tmax)) +
+  geom_point() +
+  geom_line(data = central_park_df)
+```
+
+## Patchwork ...
+
+```{r}
+tmax_tmin_p = 
+  weather_df %>% 
+  ggplot(aes(x = tmax, y = tmin, color = name)) + 
+  geom_point(alpha = .5) +
+  theme(legend.position = "none")
+
+prcp_density_plot = 
+  weather_df %>% 
+  filter(prcp > 0) %>% 
+  ggplot(aes(x = prcp, fill = name)) +
+  geom_density(alpha = .5) +
+  theme(legend.position = "none")
+    
+seasonality_plot = 
+  weather_df %>% 
+  ggplot(aes(x = date, y = tmax, color = name)) +
+  geom_point(alpha = .5) + 
+  geom_smooth(se = FALSE) +
+  theme(legend.position = "none")
+
+(tmax_tmin_p + prcp_density_plot) / seasonality_plot
+```
+
+## Data manipulation
+
+```{r}
+weather_df %>% 
+  mutate(name = forcats::fct_reorder(name, tmax)) %>% 
+  ggplot(aes(x = name, y = tmax)) +
+  geom_boxplot()
+```
+
+```{r}
+weather_df %>%
+  mutate(name = forcats::fct_relevel(name, c("Waikiki_HA", "CentralPark_NY", "Waterhole_WA"))) %>% 
+  ggplot(aes(x = name, y = tmax)) + 
+  geom_boxplot() +
+  theme(legend.position = "bottom")
+```
+
+```{r}
+weather_df %>%
+  mutate(name = fct_reorder(name, tmax)) %>% 
+  ggplot(aes(x = name, y = tmax)) + 
+  geom_boxplot() +
+  theme(legend.position = "bottom")
+```
+
+```{r}
+pulse_data = 
+  haven::read_sas("./data_import_examples/public_pulse_data.sas7bdat") %>%
+  janitor::clean_names() %>%
+  pivot_longer(
+    bdi_score_bl:bdi_score_12m,
+    names_to = "visit", 
+    names_prefix = "bdi_score_",
+    values_to = "bdi") %>%
+  select(id, visit, everything()) %>%
+  mutate(
+    visit = recode(visit, "bl" = "00m"),
+    ## visit = fct_releval(visit, "bl")
+    visit = factor(visit, levels = str_c(c("00", "01", "06", "12"), "m"))) %>%
+  arrange(id, visit)
+
+ggplot(pulse_data, aes(x = visit, y = bdi)) + 
+  geom_boxplot()
+```
+
 
 
